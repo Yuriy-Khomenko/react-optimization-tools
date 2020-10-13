@@ -1,34 +1,31 @@
-import React from 'react';
-import qcompare from './utils';
-import deepMemoizeOnce from 'deep-memoize-once';
+'use strict';
 
-const memoDeep = (component) => React.memo(component, qcompare);
+const { useRef, memo } = require('react');
+const compareDeep = require('./utils/compareDeep');
+const memoizeDeep = require('./utils/memoizeDeep');
+
+const memoDeep = (component) => memo(component, compareDeep);
 
 function useMemoDeep(func, props) {
   const refInputs = useRef(null);
-
-  if (!refInputs.current || !qcompare(refInputs.current.props, props)) {
+  if (!refInputs.current || !compareDeep(refInputs.current.props, props)) {
     refInputs.current = { res: func(), props };
   }
-
   return refInputs.current.res;
 }
 
 function useCallbackDeep(func, props) {
   const refInputs = useRef(null);
-
-  if (!refInputs.current || !qcompare(refInputs.current.props, props)) {
+  if (!refInputs.current || !compareDeep(refInputs.current.props, props)) {
     refInputs.current = { res: func, props };
   }
-
   return refInputs.current.res;
 }
 
-export {
+module.exports = {
   memoDeep,
   useMemoDeep,
   useCallbackDeep,
-  useMemo: useMemoDeep,
-  useCallback: useCallbackDeep,
-  deepMemoizeOnce
+  memoizeDeep,
+  compareDeep
 };

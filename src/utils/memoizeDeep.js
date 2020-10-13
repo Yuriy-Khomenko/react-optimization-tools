@@ -1,9 +1,9 @@
 'use strict'
 
-const qcompare = require('qcompare');
+const qcompare = require('./compareDeep');
 const {qclone, qcloneStrict, qcloneCircular, qcloneStrictCircular } = require('qclone');
 
-function deepMemoizeOnce(f, s) {
+function memoizeDeep(f, s) {
   let r, p = { length: null };
   if (s) {
     let cf;
@@ -58,4 +58,4 @@ function deepMemoizeOnce(f, s) {
   }
 }
 
-module.exports = deepMemoizeOnce;
+module.exports = memoizeDeep;

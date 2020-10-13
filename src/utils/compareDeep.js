@@ -14,6 +14,7 @@ function qcompare(a, b) {
           let t,i,x,p =__qkeys__(b), g = 0;
           for(i in a){
             if(__qhop__.call(a, i)){
+              if(a.$$typeof && i === '_owner'){g++; continue;}
               x = a[i];
               t = b[i];
               if(x !== t){
@@ -37,7 +38,7 @@ function qcompare(a, b) {
           b = b.getTime();
           return a === b || (a !== a && b !== b);
         case Map:
-          if(a.size !== b.size)return false;
+          if(a.size !== b.size || a.entries !== b.entries)return false;
           let c,m,e = b.entries();
           for(c of a){
             m = e.next().value;
@@ -46,7 +47,7 @@ function qcompare(a, b) {
           }
           return true;
         case Set:
-          if(a.size !== b.size)return false;
+          if(a.size !== b.size || a.values !== b.values)return false;
           let v,h,r = b.values();
           for(v of a){
             h = r.next().value;
@@ -55,10 +56,10 @@ function qcompare(a, b) {
           return true;
         case RegExp:
           return a.source === b.source && a.flags === b.flags;
-        case BigInt:
         case String:
         case Number:
         case Boolean:
+        //case BigInt:
           return a.valueOf() === b.valueOf();
         case Promise:
         case Symbol:
