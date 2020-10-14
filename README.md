@@ -24,7 +24,7 @@ export default memoDeep(Component);
 Remembers the last result of the function. Analog [memoize-one](https://github.com/alexreardon/memoize-one) but with deep comparison and better performance. Based on project [deepMemoizeOnce](https://github.com/Yuriy-Khomenko/deep-memoize-once).
 
 Example of use:
-- #### 2.1.
+- 2.1.
 ```javascript
 import { memoizeDeep } from 'react-optimization-tools';
 
@@ -36,7 +36,7 @@ const mapStateToProps = ({ data }) => {
   }}
   ```
 
-- #### 2.2. ([reselect](https://github.com/reduxjs/reselect))
+- 2.2. ([reselect](https://github.com/reduxjs/reselect))
 ```javascript
 import { createSelectorCreator } from 'reselect';
 import { memoizeDeep } from 'react-optimization-tools';
@@ -59,7 +59,7 @@ const selector = customSelectorCreator(
 Function of fast deep comparison of two values.
 
 Example of use:
-- #### 3.1. ([reselect](https://github.com/reduxjs/reselect))
+- 3.1. ([reselect](https://github.com/reduxjs/reselect))
 ```javascript
 import { createSelectorCreator, defaultMemoize } from 'reselect';
 import { compareDeep } from 'react-optimization-tools';
@@ -75,7 +75,7 @@ const mySelector = createDeepEqualSelector(
 )
 ```
 
-- #### 3.2. ([React.memo](https://reactjs.org/docs/react-api.html#reactmemo))
+- 3.2. ([React.memo](https://reactjs.org/docs/react-api.html#reactmemo))
 ```javascript
 import React from 'react';
 import { compareDeep } from 'react-optimization-tools';
@@ -85,7 +85,7 @@ const MemoComponent = React.memo(Component, compareDeep);
 export default React.memo(Component, compareDeep);
 ```
 
-- #### 3.3. ([shouldComponentUpdate](https://reactjs.org/docs/optimizing-performance.html#shouldcomponentupdate-in-action))
+- 3.3. ([shouldComponentUpdate](https://reactjs.org/docs/optimizing-performance.html#shouldcomponentupdate-in-action))
 ```javascript
 import React from 'react';
 import { compareDeep } from 'react-optimization-tools';
