@@ -1,14 +1,48 @@
 {
   "name": "react-optimization-tools",
   "version": "1.0.0",
-  "description": "",
+  "description": "Set of the fastest tools for optimizing the work of a React application",
   "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yuriy-Khomenko/react-optimization-tools.git"
+  },
   "peerDependencies": {
     "react": "^16.13.1"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "qclone": "^1.0.10"
-  }
+  },
+  "keywords": [
+    "react",
+    "react-fast",
+    "react-optimization",
+    "react-optimization-tools",
+    "react-tools",
+    "memo",
+    "memo-deep",
+    "useMemo",
+    "useCallback",
+    "memoize",
+    "fast",
+    "fastest",
+    "deep",
+    "compare",
+    "equal",
+    "equals",
+    "deep-equal",
+    "performance",
+    "fast-deep-equal",
+    "fast-equal",
+    "fast-equals",
+    "fast-compare",
+    "equal-object",
+    "compare-object"
+  ],
+  "author": "Yuriy Khomenko",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Yuriy-Khomenko/react-optimization-tools/issues"
+  },
+  "homepage": "https://github.com/Yuriy-Khomenko/react-optimization-tools#readme"
 }
