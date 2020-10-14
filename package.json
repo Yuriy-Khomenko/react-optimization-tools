@@ -1,6 +1,6 @@
 {
   "name": "react-optimization-tools",
-  "version": "1.0.1",
+  "version": "1.0",
   "description": "Set of the fastest tools for optimizing the work of a React application",
   "main": "src/index.js",
   "repository": {
