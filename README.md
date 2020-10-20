@@ -14,6 +14,7 @@ If the props are not changed, the component is not rendered. Analog [React.memo]
 
 Example of use:
 ```javascript
+import React from 'react';
 import { memoDeep } from 'react-optimization-tools';
 
 const Component = (props) => {...};
@@ -104,7 +105,7 @@ Hook for memoizing the result of the function with unchanged values of the input
 Example of use:
 ```javascript
 import React, { useState } from 'react';
-import { compareDeep } from 'react-optimization-tools';
+import { useMemoDeep } from 'react-optimization-tools';
 
 const Component = () => {
 const [ count, setCount ] = useState(0);
