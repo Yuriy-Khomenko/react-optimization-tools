@@ -1,6 +1,6 @@
 {
   "name": "react-optimization-tools",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Set of the fastest tools for optimizing the work of a React application",
   "main": "src/index.js",
   "repository": {
@@ -11,7 +11,7 @@
     "react": "^16.13.1"
   },
   "dependencies": {
-    "qclone": "^1.0.10"
+    "qclone": "^1.1.0"
   },
   "keywords": [
     "react",
