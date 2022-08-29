@@ -6,7 +6,7 @@ npm install --save react-optimization-tools
 
 ### Features
 
-The set includes five algorithms: three functions (memoDeep, memoizeDeep, compareDeep) and two hooks (useMemoDeep, useCallbackDeep). They use deep comparison for equality.
+The set includes six algorithms: four functions (memoDeep, memoizeDeep, compareDeep, staticCallback) and two hooks (useMemoDeep, useCallbackDeep). They use deep comparison for equality.
 They are all based on a modified version of the [qcompare](https://github.com/Yuriy-Khomenko/qcompare) function, which according to the author is the fastest comparison function in the industry.
 
 #### 1. memoDeep
@@ -101,6 +101,7 @@ class Component extends React.Component {
 
 #### 4. useMemoDeep
 Hook for memoizing the result of the function with unchanged values of the input parameters. Similar to [useMemo](https://reactjs.org/docs/hooks-reference.html#usememo), but with a deep comparison.
+The arguments of the hook: useMemoDeep(func, props, isCloneProps = false)
 
 Example of use:
 ```javascript
@@ -117,8 +118,9 @@ return(...)
 }
 ```
 
-#### 5. useCallbackDeep
+#### 5. <a href="#usecallbackdeep">useCallbackDeep</a>
 Hook for memoizing a reference to a function with unchanged values of input parameters. Similar to [useCallback](https://reactjs.org/docs/hooks-reference.html#usecallback), but with a deep comparison.
+The arguments of the hook: useCallbackDeep(func, props, isCloneProps = false)
 
 Example of use:
 ```javascript
@@ -132,6 +134,44 @@ const [ count, setCount ] = useState(0);
 const funcRef = useCallbackDeep(() => {...}, [count]);
 
 return(...)
+}
+```
+
+#### 6. staticCallback
+Function for memoizing a reference to a function with unchanged values of input parameters. Similar to [useCallbackDeep](https://www.npmjs.com/package/react-optimization-tools#usecallbackdeep), but for class components. Used in cases when it is difficult to create functions in the main definition of the class, as in the example below.
+The arguments of the function: staticCallback(context, function, key, props = [], isCloneProps = false)
+
+Example of use:
+```javascript
+import React, { PureComponent } from 'react';
+import { staticCallback } from 'react-optimization-tools';
+import GalleryItem from './components/GalleryItem';
+
+
+class Gallery extends PureComponent {
+  sc = (fn, key, props) => staticCallback(this, fn, key, props);
+
+  render() {
+    const { sc, props: { items } } = this;
+    return (
+      <div>
+        {items.map((props, index) => {
+          const { hash } = props;
+
+          return (
+            <GalleryItem
+              onDragStart={staticCallback(this, (event) => this.dragStart(event, index), `onDragStart${hash}`, [index])}
+              onDragEnd={staticCallback(this, (event) => this.dragEnd(event, index), `onDragEnd${hash}`, [index])}
+              // or        
+              onDragStart={sc((event) => this.dragStart(event, index), `onDragStart${hash}`, [index])}
+              onDragEnd={sc((event) => this.dragEnd(event, index), `onDragEnd${hash}`, [index])}
+              {...props}
+            />
+          );
+        })}
+      </div>
+    );
+  }
 }
 ```
 
