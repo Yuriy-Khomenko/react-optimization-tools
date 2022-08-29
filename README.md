@@ -118,7 +118,7 @@ return(...)
 }
 ```
 
-#### 5. <a href="#usecallbackdeep">useCallbackDeep</a>
+#### 5. useCallbackDeep
 Hook for memoizing a reference to a function with unchanged values of input parameters. Similar to [useCallback](https://reactjs.org/docs/hooks-reference.html#usecallback), but with a deep comparison.
 The arguments of the hook: useCallbackDeep(func, props, isCloneProps = false)
 
@@ -138,7 +138,7 @@ return(...)
 ```
 
 #### 6. staticCallback
-Function for memoizing a reference to a function with unchanged values of input parameters. Similar to [useCallbackDeep](https://www.npmjs.com/package/react-optimization-tools#usecallbackdeep), but for class components. Used in cases when it is difficult to create functions in the main definition of the class, as in the example below.
+Function for memoizing a reference to a function with unchanged values of input parameters. Similar to [useCallbackDeep](https://github.com/Yuriy-Khomenko/react-optimization-tools#5-usecallbackdeep), but for class components. Used in cases when it is difficult to create functions in the main definition of the class, as in the example below.
 The arguments of the function: staticCallback(context, function, key, props = [], isCloneProps = false)
 
 Example of use:
