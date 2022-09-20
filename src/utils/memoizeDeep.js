@@ -1,7 +1,6 @@
 'use strict'
 
 const qcompare = require('./compareDeep');
-const {qclone, qcloneStrict, qcloneCircular, qcloneStrictCircular } = require('qclone');
 
 function memoizeDeep(f, s) {
   let r, p = { length: null };
@@ -9,15 +8,14 @@ function memoizeDeep(f, s) {
     let cf;
     const { circular, strict } = s;
     if (circular && strict) {
-      cf = qcloneStrictCircular;
+      cf = require('qclone/qcloneStrictCircular');
     } else if (circular) {
-      cf = qcloneCircular;
+      cf = require('qclone/qcloneCircular');
     } else if (strict) {
-      cf = qcloneStrict;
+      cf = require('qclone/qcloneStrict');
     } else {
-      cf = qclone;
+      cf = require('qclone');
     }
-
     return function (...a) {
       let q = a.length;
       if (q === p.length) {

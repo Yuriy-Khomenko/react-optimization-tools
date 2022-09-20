@@ -29,7 +29,7 @@ Example of use:
 ```javascript
 import { memoizeDeep } from 'react-optimization-tools';
 
-const memoFunc = memoizeDeep((arg) => {...});// heavy computation function
+const memoFunc = memoizeDeep((arg) => {...}); // heavy computation function
 
 const mapStateToProps = ({ data }) => {
     return {
@@ -44,10 +44,9 @@ import { memoizeDeep } from 'react-optimization-tools';
 
 const customSelectorCreator = createSelectorCreator(memoizeDeep);
 // or
-const customSelectorCreator = createSelectorCreator(memoizeDeep, {
-  circular: true,
-  strict: true
-});
+const customSelectorCreator = createSelectorCreator(memoizeDeep, true); // clone the arguments of the function
+// or
+const customSelectorCreator = createSelectorCreator(memoizeDeep, { circular: true, strict: true }); // customizable cloning of the arguments of the function
 
 const selector = customSelectorCreator(
   state => state.a,
