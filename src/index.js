@@ -47,7 +47,7 @@ function staticCallback(that, fn, key, props = [], isCloneProps = false) {
   if (props.length === 0) {
     return entity.fn;
   }
-  if (qcompare(props, entity.props)) {
+  if (compareDeep(props, entity.props)) {
     return entity.fn;
   }
   entity.fn = fn;

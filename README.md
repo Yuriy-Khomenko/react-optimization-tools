@@ -6,8 +6,7 @@ npm install --save react-optimization-tools
 
 ### Features
 
-The set includes six algorithms: four functions (**memoDeep**, **memoizeDeep**, **compareDeep**, **staticCallback**) and two hooks (**useMemoDeep**, **useCallbackDeep**). They use deep comparison for equality.
-They are all based on a modified version of the [qcompare](https://github.com/Yuriy-Khomenko/qcompare) function, which according to the author is the fastest comparison function in the industry.
+The set includes six algorithms: four functions (**memoDeep**, **memoizeDeep**, **compareDeep**, **staticCallback**) and two hooks (**useMemoDeep**, **useCallbackDeep**).
 
 #### 1. memoDeep
 If the props are not changed, the component is not rendered. Analog [React.memo](https://reactjs.org/docs/react-api.html#reactmemo) but with deep comparison.
