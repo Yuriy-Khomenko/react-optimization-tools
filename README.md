@@ -1,17 +1,41 @@
 ## react-optimization-tools
+
 Set of the fastest tools for optimizing the work of a React application
 
 ### Install
+
 npm install --save react-optimization-tools
 
 ### Features
 
-The set includes six algorithms: four functions (**memoDeep**, **memoizeDeep**, **compareDeep**, **staticCallback**) and two hooks (**useMemoDeep**, **useCallbackDeep**).
+The set includes eight algorithms:
+
+four functions:
+
+- **memoDeep**
+
+- **memoizeDeep**
+
+- **compareDeep**
+
+- **staticCallback**
+
+and four hooks:
+
+- **useMemoDeep / useMemoDeepSE**
+
+- **useCallbackDeep / useCallbackDeepSE**
+
+- **useEffectDeep**
+
+- **useEvent**
 
 #### 1. memoDeep
+
 If the props are not changed, the component is not rendered. Analog [React.memo](https://reactjs.org/docs/react-api.html#reactmemo) but with deep comparison.
 
 Example of use:
+
 ```javascript
 import React from 'react';
 import { memoDeep } from 'react-optimization-tools';
@@ -21,10 +45,13 @@ export default memoDeep(Component);
 ```
 
 #### 2. memoizeDeep
+
 Remembers the last result of the function. Analog [memoize-one](https://github.com/alexreardon/memoize-one) but with deep comparison and better performance. Based on project [deepMemoizeOnce](https://github.com/Yuriy-Khomenko/deep-memoize-once).
 
 Example of use:
+
 - 2.1.
+
 ```javascript
 import { memoizeDeep } from 'react-optimization-tools';
 
@@ -34,9 +61,10 @@ const mapStateToProps = ({ data }) => {
     return {
     propValue: memoFunc(data)
   }}
-  ```
+```
 
 - 2.2. ([reselect](https://github.com/reduxjs/reselect))
+
 ```javascript
 import { createSelectorCreator } from 'reselect';
 import { memoizeDeep } from 'react-optimization-tools';
@@ -55,10 +83,13 @@ const selector = customSelectorCreator(
 ```
 
 #### 3. compareDeep
+
 Function of fast deep comparison of two values.
 
 Example of use:
+
 - 3.1. ([reselect](https://github.com/reduxjs/reselect))
+
 ```javascript
 import { createSelectorCreator, defaultMemoize } from 'reselect';
 import { compareDeep } from 'react-optimization-tools';
@@ -75,9 +106,10 @@ const mySelector = createDeepEqualSelector(
 ```
 
 - 3.2. ([React.memo](https://reactjs.org/docs/react-api.html#reactmemo))
+
 ```javascript
-import React from 'react';
-import { compareDeep } from 'react-optimization-tools';
+import React from "react";
+import { compareDeep } from "react-optimization-tools";
 
 const MemoComponent = React.memo(Component, compareDeep);
 // or
@@ -85,6 +117,7 @@ export default React.memo(Component, compareDeep);
 ```
 
 - 3.3. ([shouldComponentUpdate](https://reactjs.org/docs/optimizing-performance.html#shouldcomponentupdate-in-action))
+
 ```javascript
 import React from 'react';
 import { compareDeep } from 'react-optimization-tools';
@@ -98,10 +131,12 @@ class Component extends React.Component {
 ```
 
 #### 4. useMemoDeep
+
 Hook for memoizing the result of the function with unchanged values of the input parameters. Similar to [useMemo](https://reactjs.org/docs/hooks-reference.html#usememo), but with a deep comparison.
 The arguments of the hook: useMemoDeep(function, dependencies, isCloneProps = false)
 
 Example of use:
+
 ```javascript
 import React, { useState } from 'react';
 import { useMemoDeep } from 'react-optimization-tools';
@@ -116,11 +151,31 @@ return(...)
 }
 ```
 
+The documentation of the React [says](https://reactjs.org/docs/hooks-reference.html#usememo): "Remember that the function passed to useMemo runs during rendering. Don’t do anything there that you wouldn’t normally do while rendering. For example, side effects belong in useEffect, not useMemo." Like here:
+
+```javascript
+const [count, setCount] = useState(0);
+
+const value = useMemoDeep(() => {
+  const res = count + 10;
+
+  setState(res);
+
+  return res;
+}, [def]);
+```
+
+But if you need to use with side effects, then use the SE version - **useMemoDeepSE**
+
 #### 5. useCallbackDeep
+
 Hook for memoizing a reference to a function with unchanged values of input parameters. Similar to [useCallback](https://reactjs.org/docs/hooks-reference.html#usecallback), but with a deep comparison.
 The arguments of the hook: useCallbackDeep(function, dependencies, isCloneProps = false)
 
+**useCallbackDeepSE** - version for side effects(explained above)
+
 Example of use:
+
 ```javascript
 import React, { useState } from 'react';
 import { useCallbackDeep } from 'react-optimization-tools';
@@ -135,21 +190,53 @@ return(...)
 }
 ```
 
-#### 6. staticCallback
+#### 6. useEffectDeep
+
+Similar to [useEffect](https://reactjs.org/docs/hooks-reference.html#useeffect), but with a deep comparison.
+
+
+#### 7. useEvent
+
+The callback in the useEvent will always have access to the current state/props, while having a static link and without the transmission of dependencies.
+
+Example of use:
+
+```javascript
+const Component = () => {
+  const [value, setValue] = useState(0);
+
+  const onClick = useEvent(() => {
+    console.log(value);
+  });
+
+  return (
+    <div>
+      <ChildComponent onClick={onClick} />;
+    </div>
+  );
+}
+```
+
+#### 8. staticCallback
+
 Function for memoizing a reference to a function with unchanged values of input parameters. Similar to [useCallbackDeep](https://github.com/Yuriy-Khomenko/react-optimization-tools#5-usecallbackdeep), but for class components. Used in cases when it is difficult to create functions in the main definition of the class, as in the example below.
 The arguments of the function: staticCallback(context, function, key, dependencies = [], isCloneProps = false)
 
 Example of use:
+
 ```javascript
-import React, { PureComponent } from 'react';
-import { staticCallback } from 'react-optimization-tools';
-import GalleryItem from './components/GalleryItem';
+import React, { PureComponent } from "react";
+import { staticCallback } from "react-optimization-tools";
+import GalleryItem from "./components/GalleryItem";
 
 class Gallery extends PureComponent {
   sc = (fn, key, props) => staticCallback(this, fn, key, props);
 
   render() {
-    const { sc, props: { items } } = this;
+    const {
+      sc,
+      props: { items },
+    } = this;
     return (
       <div>
         {items.map((props, index) => {
@@ -157,11 +244,29 @@ class Gallery extends PureComponent {
 
           return (
             <GalleryItem
-              onDragStart={staticCallback(this, (event) => this.dragStart(event, index), `onDragStart${hash}`, [index])}
-              onDragEnd={staticCallback(this, (event) => this.dragEnd(event, index), `onDragEnd${hash}`, [index])}
-              // or        
-              onDragStart={sc((event) => this.dragStart(event, index), `onDragStart${hash}`, [index])}
-              onDragEnd={sc((event) => this.dragEnd(event, index), `onDragEnd${hash}`, [index])}
+              onDragStart={staticCallback(
+                this,
+                (event) => this.dragStart(event, index),
+                `onDragStart${hash}`,
+                [index]
+              )}
+              onDragEnd={staticCallback(
+                this,
+                (event) => this.dragEnd(event, index),
+                `onDragEnd${hash}`,
+                [index]
+              )}
+              // or
+              onDragStart={sc(
+                (event) => this.dragStart(event, index),
+                `onDragStart${hash}`,
+                [index]
+              )}
+              onDragEnd={sc(
+                (event) => this.dragEnd(event, index),
+                `onDragEnd${hash}`,
+                [index]
+              )}
               {...props}
             />
           );
@@ -173,6 +278,7 @@ class Gallery extends PureComponent {
 ```
 
 ### Benchmarks
+
 The algorithms are based on the speed of the modified algorithm of the [qcompare](https://github.com/Yuriy-Khomenko/qcompare) project. The modification was related to the ability to work with React components. Therefore, the performance of this algorithm was compared with similar projects. Performance tests were used from these projects.
 
 ```

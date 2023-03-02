@@ -1,47 +1,107 @@
 'use strict';
 
-const { qcloneCircular } = require('qclone');
-const { useRef, memo } = require('react');
+const {
+  qcloneCircular
+} = require('qclone');
+const {
+  useRef,
+  memo
+} = require('react');
 const compareDeep = require('./utils/compareDeep');
 const memoizeDeep = require('./utils/memoizeDeep');
 
 const memoDeep = (component) => memo(component, compareDeep);
 
-function useMemoDeep(func, props, isCloneProps = false) {
-  const refInputs = useRef(null);
-  if (props.length === 0 && refInputs.current) {
-    return refInputs.current.res;
+const useMemoDeep = (func, deps, isCloneProps = false) => {
+  const ref = useRef(null);
+  if (deps.length === 0 && ref.current) {
+    return ref.current.res;
   }
-  if (!refInputs.current || !compareDeep(refInputs.current.props, props)) {
-    refInputs.current = {
+  if (!ref.current || !compareDeep(ref.current.deps, deps)) {
+    ref.current = {
       res: func(),
-      props: isCloneProps ? qcloneCircular(props) : props
+      deps: isCloneProps ? qcloneCircular(deps) : deps
     };
   }
-  return refInputs.current.res;
-}
+  return ref.current.res;
+};
 
-function useCallbackDeep(func, props, isCloneProps = false) {
-  const refInputs = useRef(null);
-  if (props.length === 0 && refInputs.current) {
-    return refInputs.current.res;
+const useMemoDeepSE = (func, deps, isCloneProps = false) => {
+  const ref = useRef();
+
+  useEffect(() => {
+    if (deps.length && !isEqual(ref.current.deps, deps)) {
+      ref.current = {
+        res: func(),
+        deps: isCloneProps ? cloneDeep(deps) : deps,
+      };
+    }
+  });
+
+  if (ref.current) {
+    return ref.current.res
   }
-  if (!refInputs.current || !compareDeep(refInputs.current.props, props)) {
-    refInputs.current = {
+
+  const res = func();
+
+  ref.current = {
+    res,
+    deps: isCloneProps ? cloneDeep(deps) : deps,
+  };
+
+  return res;
+};
+
+const useCallbackDeep = (func, deps, isCloneProps = false) => {
+  const ref = useRef(null);
+  if (deps.length === 0 && ref.current) {
+    return ref.current.res;
+  }
+  if (!ref.current || !compareDeep(ref.current.deps, deps)) {
+    ref.current = {
       res: func,
-      props: isCloneProps ? qcloneCircular(props) : props
+      deps: isCloneProps ? qcloneCircular(deps) : deps
     };
   }
-  return refInputs.current.res;
-}
+  return ref.current.res;
+};
 
-function staticCallback(that, fn, key, props = [], isCloneProps = false) {
+const useCallbackDeepSE = (func, deps, isCloneProps = false) => {
+  const ref = useRef();
+
+  useEffect(() => {
+    if (deps.length && !isEqual(ref.current.deps, deps)) {
+      ref.current = {
+        res: func,
+        deps: isCloneProps ? cloneDeep(deps) : deps,
+      };
+    }
+  });
+
+  if (ref.current) {
+    return ref.current.res
+  }
+
+  const res = func;
+
+  ref.current = {
+    res,
+    deps: isCloneProps ? cloneDeep(deps) : deps,
+  };
+
+  return res;
+};
+
+const staticCallback = (that, fn, key, props = [], isCloneProps = false) => {
   if (!that.reactOptimizationTools) {
     that.reactOptimizationTools = {};
   }
   const entity = that.reactOptimizationTools[key];
   if (!entity) {
-    that.reactOptimizationTools[key] = {fn, props};
+    that.reactOptimizationTools[key] = {
+      fn,
+      props
+    };
     return fn;
   }
   if (props.length === 0) {
@@ -53,13 +113,46 @@ function staticCallback(that, fn, key, props = [], isCloneProps = false) {
   entity.fn = fn;
   entity.props = isCloneProps ? qcloneCircular(props) : props;
   return fn;
-}
+};
+
+const useEffectDeep = (func, deps) => {
+  const ref = useRef(null);
+  const {
+    current
+  } = ref;
+  let isEqual = null;
+
+  if (deps.length) {
+    isEqual = compareDeep(current, deps);
+  }
+
+  if (isEqual === false || !current) {
+    ref.current = deps;
+  }
+
+  useEffect(func, ref.current);
+};
+
+const useEvent = (func) => {
+  const funcRef = useRef(func);
+
+  const staticFuncRef = useRef((...args) => {
+    return funcRef.current(...args);
+  });
+
+  funcRef.current = func;
+  return staticFuncRef.current;
+};
 
 module.exports = {
   memoDeep,
-  useMemoDeep,
-  useCallbackDeep,
   memoizeDeep,
   compareDeep,
-  staticCallback
+  staticCallback,
+  useMemoDeep,
+  useMemoDeepSE,
+  useCallbackDeep,
+  useCallbackDeepSE,
+  useEffectDeep,
+  useEvent
 };
