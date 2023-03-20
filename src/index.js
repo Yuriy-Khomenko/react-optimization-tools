@@ -5,7 +5,8 @@ const {
 } = require('qclone');
 const {
   useRef,
-  memo
+  memo,
+  useEffect
 } = require('react');
 const compareDeep = require('./utils/compareDeep');
 const memoizeDeep = require('./utils/memoizeDeep');
@@ -30,10 +31,10 @@ const useMemoDeepSE = (func, deps, isCloneProps = false) => {
   const ref = useRef();
 
   useEffect(() => {
-    if (deps.length && !isEqual(ref.current.deps, deps)) {
+    if (deps.length && !compareDeep(ref.current.deps, deps)) {
       ref.current = {
         res: func(),
-        deps: isCloneProps ? cloneDeep(deps) : deps,
+        deps: isCloneProps ? qcloneCircular(deps) : deps,
       };
     }
   });
@@ -46,7 +47,7 @@ const useMemoDeepSE = (func, deps, isCloneProps = false) => {
 
   ref.current = {
     res,
-    deps: isCloneProps ? cloneDeep(deps) : deps,
+    deps: isCloneProps ? qcloneCircular(deps) : deps,
   };
 
   return res;
@@ -70,10 +71,10 @@ const useCallbackDeepSE = (func, deps, isCloneProps = false) => {
   const ref = useRef();
 
   useEffect(() => {
-    if (deps.length && !isEqual(ref.current.deps, deps)) {
+    if (deps.length && !compareDeep(ref.current.deps, deps)) {
       ref.current = {
         res: func,
-        deps: isCloneProps ? cloneDeep(deps) : deps,
+        deps: isCloneProps ? qcloneCircular(deps) : deps,
       };
     }
   });
@@ -86,7 +87,7 @@ const useCallbackDeepSE = (func, deps, isCloneProps = false) => {
 
   ref.current = {
     res,
-    deps: isCloneProps ? cloneDeep(deps) : deps,
+    deps: isCloneProps ? qcloneCircular(deps) : deps,
   };
 
   return res;
