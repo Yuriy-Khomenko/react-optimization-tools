@@ -15,7 +15,7 @@ const memoDeep = (component) => memo(component, compareDeep);
 
 const useMemoDeep = (func, deps, isCloneProps = false) => {
   const ref = useRef(null);
-  if (deps.length === 0 && ref.current) {
+  if (deps && deps.length === 0 && ref.current) {
     return ref.current.res;
   }
   if (!ref.current || !compareDeep(ref.current.deps, deps)) {
@@ -31,7 +31,7 @@ const useMemoDeepSE = (func, deps, isCloneProps = false) => {
   const ref = useRef();
 
   useEffect(() => {
-    if (deps.length && !compareDeep(ref.current.deps, deps)) {
+    if (deps && deps.length && !compareDeep(ref.current.deps, deps)) {
       ref.current = {
         res: func(),
         deps: isCloneProps ? qcloneCircular(deps) : deps,
@@ -55,7 +55,7 @@ const useMemoDeepSE = (func, deps, isCloneProps = false) => {
 
 const useCallbackDeep = (func, deps, isCloneProps = false) => {
   const ref = useRef(null);
-  if (deps.length === 0 && ref.current) {
+  if (deps && deps.length === 0 && ref.current) {
     return ref.current.res;
   }
   if (!ref.current || !compareDeep(ref.current.deps, deps)) {
@@ -71,7 +71,7 @@ const useCallbackDeepSE = (func, deps, isCloneProps = false) => {
   const ref = useRef();
 
   useEffect(() => {
-    if (deps.length && !compareDeep(ref.current.deps, deps)) {
+    if (deps && deps.length && !compareDeep(ref.current.deps, deps)) {
       ref.current = {
         res: func,
         deps: isCloneProps ? qcloneCircular(deps) : deps,
@@ -123,7 +123,7 @@ const useEffectDeep = (func, deps) => {
   } = ref;
   let isEqual = null;
 
-  if (deps.length) {
+  if (deps && deps.length) {
     isEqual = compareDeep(current, deps);
   }
 
